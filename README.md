@@ -13,7 +13,9 @@ codex plugin marketplace add dicnunz/krea-codex-plugin
 codex plugin add krea-ai@krea-codex
 ```
 
-Start a new Codex task and ask it to use Krea. On first launch, your browser opens Krea's authorization page. Approve **Krea Local Companion** once; the OAuth credentials are then stored in your macOS Keychain.
+Quit and reopen Codex after installation, then start a new task and ask it to use Krea. The installed plugin should appear as **Krea** with the black Krea logo—not Codex's generic light-bulb placeholder. On first use, your browser opens Krea's authorization page. Approve **Krea Local Companion** once; the OAuth credentials are then stored in your macOS Keychain.
+
+If Codex was already open while you installed the plugin, the restart is required for its tools, skill, and logo to load into a fresh task.
 
 Example:
 
@@ -29,6 +31,15 @@ Example:
 - Stores OAuth credentials in macOS Keychain under `ai.krea.local-companion`; credentials are never written into the repository.
 
 ## Troubleshooting
+
+If **Krea** shows a generic light-bulb icon, update the marketplace and reinstall the plugin, then fully quit and reopen Codex:
+
+```sh
+codex plugin marketplace upgrade krea-codex
+codex plugin add krea-ai@krea-codex
+```
+
+Confirm that `codex plugin list` reports `krea-ai@krea-codex` as installed and enabled.
 
 If authorization did not finish during first launch, run the bundled companion directly and then start a new Codex task:
 

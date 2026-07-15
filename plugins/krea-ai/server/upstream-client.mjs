@@ -2,11 +2,11 @@ import { createServer } from "node:http";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { UnauthorizedError } from "@modelcontextprotocol/sdk/client/auth.js";
-import { CALLBACK_HOST, CALLBACK_PATH, CALLBACK_PORT, UPSTREAM_URL } from "./config.mjs";
+import { CALLBACK_HOST, CALLBACK_PATH, CALLBACK_PORT, PLUGIN_VERSION, UPSTREAM_URL } from "./config.mjs";
 import { KeychainStore } from "./keychain-store.mjs";
 import { PersistentOAuthProvider } from "./oauth-provider.mjs";
 
-const createClient = () => new Client({ name: "krea-local-companion", version: "0.4.3" }, { capabilities: {} });
+const createClient = () => new Client({ name: "krea-local-companion", version: PLUGIN_VERSION }, { capabilities: {} });
 
 const waitForCallback = (provider, timeoutMs = 180_000) => new Promise((resolve, reject) => {
   const server = createServer(async (req, res) => {

@@ -1,10 +1,11 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+import { PLUGIN_VERSION } from "./config.mjs";
 import { forceAsyncArguments, sanitizeResult, sanitizeTool, waitForJob, waitForJobTool } from "./proxy-core.mjs";
 
 export function createRelayServer(upstream) {
-  const server = new Server({ name: "krea-local-companion", version: "0.4.3" }, {
+  const server = new Server({ name: "krea-local-companion", version: PLUGIN_VERSION }, {
     capabilities: { tools: {} },
     instructions: "Use Krea submission tools asynchronously, preserve each returned job ID, and call wait_for_job before chaining the resulting original asset into another stage."
   });

@@ -11,5 +11,6 @@ npm run test:live
 
 cd "$repo_root"
 git diff --exit-code -- plugins/krea-ai/dist/krea-companion.mjs plugins/krea-ai/THIRD_PARTY_NOTICES.txt
+"$repo_root/scripts/test-clean-install.sh" "$repo_root"
 
 echo "Release checks passed."

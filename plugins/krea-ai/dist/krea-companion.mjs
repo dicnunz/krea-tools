@@ -17108,6 +17108,7 @@ var StreamableHTTPClientTransport = class {
 
 // server/config.mjs
 var UPSTREAM_URL = "https://api.krea.ai/mcp";
+var PLUGIN_VERSION = "0.4.4";
 var CALLBACK_HOST = "127.0.0.1";
 var CALLBACK_PORT = Number(process.env.KREA_CALLBACK_PORT ?? 37654);
 var CALLBACK_PATH = "/oauth/callback";
@@ -17262,7 +17263,7 @@ var PersistentOAuthProvider = class {
 };
 
 // server/upstream-client.mjs
-var createClient = () => new Client({ name: "krea-local-companion", version: "0.4.3" }, { capabilities: {} });
+var createClient = () => new Client({ name: "krea-local-companion", version: PLUGIN_VERSION }, { capabilities: {} });
 var waitForCallback = (provider, timeoutMs = 18e4) => new Promise((resolve, reject) => {
   const server = createServer(async (req, res) => {
     const url2 = new URL(req.url ?? "/", `http://${CALLBACK_HOST}:${CALLBACK_PORT}`);
@@ -18081,7 +18082,7 @@ async function waitForJob(client, { jobId, timeoutSeconds = 900, pollSeconds = 1
 
 // server/relay-stdio.mjs
 function createRelayServer(upstream) {
-  const server = new Server({ name: "krea-local-companion", version: "0.4.3" }, {
+  const server = new Server({ name: "krea-local-companion", version: PLUGIN_VERSION }, {
     capabilities: { tools: {} },
     instructions: "Use Krea submission tools asynchronously, preserve each returned job ID, and call wait_for_job before chaining the resulting original asset into another stage."
   });

@@ -10,4 +10,5 @@ Before publishing a change:
 4. Exercise first-use OAuth with an empty credential namespace and confirm MCP `initialize` plus `tools/list` succeeds.
 5. Run one complete generation-to-enhancement workflow using the installed plugin.
 6. Verify the public README commands against the current default branch and supported Codex CLI.
-7. Keep generated credentials, tokens, local Keychain data, `node_modules`, and build metadata out of Git.
+7. Verify the cached `composerIcon`, `logo`, and `logoDark` assets render as the Krea mark rather than a generic fallback.
+8. Keep generated credentials, tokens, local Keychain data, `node_modules`, and build metadata out of Git.

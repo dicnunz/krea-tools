@@ -34,6 +34,7 @@ for (const file of [
   manifest.apps,
   manifest.interface.composerIcon,
   manifest.interface.logo,
+  manifest.interface.logoDark,
   "skills/krea-workflows/SKILL.md",
   "skills/krea-workflows/references/workflows.md",
   "server/cli.mjs",
@@ -47,6 +48,22 @@ for (const file of [
 ]) {
   await access(path.join(root, file));
 }
+
+assert.ok(manifest.interface.defaultPrompt.length <= 3);
+for (const prompt of manifest.interface.defaultPrompt) {
+  assert.ok([...prompt].length <= 128, `default prompt is longer than 128 characters: ${prompt}`);
+}
+
+const logo = await readFile(path.join(root, manifest.interface.logo));
+assert.equal(logo.toString("ascii", 1, 4), "PNG");
+assert.equal(logo.readUInt32BE(16), 360, "logo width must match Codex's 360px plugin-card convention");
+assert.equal(logo.readUInt32BE(20), 360, "logo height must match Codex's 360px plugin-card convention");
+assert.equal(logo[24], 8, "logo must be 8-bit so Chromium does not fall back to a generic icon");
+assert.equal(logo[25], 6, "logo must be RGBA so it renders consistently in light and dark mode");
+
+const composerSvg = await readFile(path.join(root, manifest.interface.composerIcon), "utf8");
+assert.match(composerSvg, /<svg\b/);
+assert.match(composerSvg, /aria-label="Krea logo"/);
 
 const unauthenticated = await fetch("https://api.krea.ai/mcp", { redirect: "manual" });
 assert.equal(unauthenticated.status, 401);
@@ -73,6 +90,7 @@ assert.ok(oauthMetadata.registration_endpoint);
 
 const bundled = await readFile(path.join(root, "dist/krea-companion.mjs"), "utf8");
 assert.match(bundled, /Krea authorization succeeded/);
+assert.match(bundled, new RegExp(`PLUGIN_VERSION = ["']${manifest.version.replaceAll(".", "\\.")}["']`));
 assert.ok(Buffer.byteLength(bundled) > 100_000, "bundled runtime is unexpectedly small");
 
 console.log("PASS marketplace, plugin manifest, self-contained runtime, assets, MCP challenge, and OAuth discovery metadata");

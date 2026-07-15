@@ -1,10 +1,15 @@
 {
   "name": "krea-ai",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Generate, edit, enhance, upscale, and animate with Krea through your own OAuth-connected account.",
   "author": {
-    "name": "Nicholas Dunzelman"
+    "name": "Nicholas Dunzelman",
+    "url": "https://github.com/dicnunz"
   },
+  "homepage": "https://github.com/dicnunz/krea-codex-plugin#readme",
+  "repository": "https://github.com/dicnunz/krea-codex-plugin",
+  "license": "MIT",
+  "keywords": ["krea", "image-generation", "video-generation", "lora", "upscaling"],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "apps": "./.app.json",
@@ -16,12 +21,14 @@
     "category": "Creative Tools",
     "capabilities": ["Read", "Write"],
     "brandColor": "#111111",
-    "composerIcon": "./assets/krea-composer.png",
+    "websiteURL": "https://github.com/dicnunz/krea-codex-plugin",
+    "composerIcon": "./assets/krea-composer.svg",
     "logo": "./assets/krea-logo.png",
+    "logoDark": "./assets/krea-logo.png",
     "defaultPrompt": [
-      "Use Krea to create a polished image, wait for the asynchronous job to complete, and return the original asset.",
+      "Use Krea to create a polished image and return the original asset.",
       "List Krea's live models and recommend the best one for this prompt.",
-      "Enhance this image to the highest useful resolution while preserving its visual character."
+      "Enhance this image while preserving its visual character."
     ]
   }
 }

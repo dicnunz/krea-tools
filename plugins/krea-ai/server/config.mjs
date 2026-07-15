@@ -1,4 +1,5 @@
 export const UPSTREAM_URL = "https://api.krea.ai/mcp";
+export const PLUGIN_VERSION = "0.4.4";
 export const CALLBACK_HOST = "127.0.0.1";
 export const CALLBACK_PORT = Number(process.env.KREA_CALLBACK_PORT ?? 37654);
 export const CALLBACK_PATH = "/oauth/callback";
