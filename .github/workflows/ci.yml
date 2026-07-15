@@ -1,0 +1,26 @@
+name: Validate plugin
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: plugins/krea-ai/package-lock.json
+      - run: npm ci
+        working-directory: plugins/krea-ai
+      - run: npm test
+        working-directory: plugins/krea-ai
+      - name: Verify committed runtime and notices
+        run: git diff --exit-code -- plugins/krea-ai/dist/krea-companion.mjs plugins/krea-ai/THIRD_PARTY_NOTICES.txt

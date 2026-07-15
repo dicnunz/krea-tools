@@ -1,0 +1,11 @@
+export const UPSTREAM_URL = "https://api.krea.ai/mcp";
+export const CALLBACK_HOST = "127.0.0.1";
+export const CALLBACK_PORT = Number(process.env.KREA_CALLBACK_PORT ?? 37654);
+export const CALLBACK_PATH = "/oauth/callback";
+export const CALLBACK_URL = `http://${CALLBACK_HOST}:${CALLBACK_PORT}${CALLBACK_PATH}`;
+export const HTTP_HOST = "127.0.0.1";
+export const HTTP_PORT = 37655;
+export const KEYCHAIN_SERVICE = process.env.KREA_KEYCHAIN_SERVICE ?? "ai.krea.local-companion";
+export const KEYCHAIN_ACCOUNT = process.env.KREA_KEYCHAIN_ACCOUNT ?? "krea-oauth";
+export const TERMINAL_STATUSES = new Set(["completed", "failed", "cancelled", "canceled", "stalled", "timed_out", "timeout"]);
+export const SUBMISSION_TOOLS = new Set(["generate_image", "generate_video", "enhance_image", "execute_node_app"]);

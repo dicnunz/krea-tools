@@ -1,0 +1,4 @@
+interface:
+  display_name: "Krea Workflows"
+  short_description: "Reliable Krea creation and enhancement"
+  default_prompt: "Use $krea-workflows to create a polished Krea asset asynchronously, verify the terminal job result, and return the original output."

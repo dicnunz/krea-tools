@@ -1,0 +1,22 @@
+{
+  "name": "krea-ai-codex-plugin",
+  "version": "0.4.1",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "esbuild server/cli.mjs --bundle --platform=node --format=esm --target=node20 --legal-comments=eof --metafile=dist/esbuild-meta.json --outfile=dist/krea-companion.mjs && node scripts/generate-notices.mjs",
+    "auth": "node server/cli.mjs auth",
+    "serve:stdio": "node server/cli.mjs stdio",
+    "test": "npm run build && node --test test/*.test.mjs && node scripts/validate-plugin.mjs",
+    "test:live": "npm run build && node dist/krea-companion.mjs doctor"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.29.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.1"
+  }
+}

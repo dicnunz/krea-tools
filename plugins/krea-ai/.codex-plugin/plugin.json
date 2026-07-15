@@ -1,0 +1,27 @@
+{
+  "name": "krea-ai",
+  "version": "0.4.1",
+  "description": "Generate, edit, enhance, upscale, and animate with Krea through your own OAuth-connected account.",
+  "author": {
+    "name": "Nicholas Dunzelman"
+  },
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "apps": "./.app.json",
+  "interface": {
+    "displayName": "Krea",
+    "shortDescription": "Create, enhance, and upscale with Krea",
+    "longDescription": "Connects Codex to Krea through a local OAuth companion for live model discovery, image and video generation, LoRAs, enhancement, upscaling, and reliable long-running workflows without API keys or a hosted relay.",
+    "developerName": "Nicholas Dunzelman",
+    "category": "Creative Tools",
+    "capabilities": ["Read", "Write"],
+    "brandColor": "#111111",
+    "composerIcon": "./assets/krea-composer.png",
+    "logo": "./assets/krea-logo.png",
+    "defaultPrompt": [
+      "Use Krea to create a polished image, wait for the asynchronous job to complete, and return the original asset.",
+      "List Krea's live models and recommend the best one for this prompt.",
+      "Enhance this image to the highest useful resolution while preserving its visual character."
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "krea-ai": {
+      "cwd": ".",
+      "command": "node",
+      "args": ["./dist/krea-companion.mjs", "stdio"]
+    }
+  }
+}

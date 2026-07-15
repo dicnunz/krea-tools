@@ -1,0 +1,20 @@
+{
+  "name": "krea-codex",
+  "interface": {
+    "displayName": "Krea for Codex"
+  },
+  "plugins": [
+    {
+      "name": "krea-ai",
+      "source": {
+        "source": "local",
+        "path": "./plugins/krea-ai"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Design"
+    }
+  ]
+}
