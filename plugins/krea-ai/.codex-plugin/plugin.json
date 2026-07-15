@@ -1,6 +1,6 @@
 {
   "name": "krea-ai",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Generate, edit, enhance, upscale, and animate with Krea through your own OAuth-connected account.",
   "author": {
     "name": "Nicholas Dunzelman"

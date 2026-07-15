@@ -2,11 +2,11 @@
 
 Use Krea directly from Codex to discover live models, generate and edit images, create video, apply your LoRAs, enhance and upscale assets, and safely wait for long-running jobs.
 
-The plugin uses your normal Krea account through OAuth. It does not require a Krea API key, a separate API plan, or a hosted relay.
+The plugin uses your normal Krea account through OAuth and generations consume that account's usual plan and credits. It does not require a Krea API key, separate API billing, or a hosted relay.
 
 ## Install
 
-Requirements: the Codex desktop app or CLI with plugins enabled, macOS, and Node.js 20 or newer.
+Requirements: the Codex desktop app or CLI with plugins enabled and macOS. The launcher uses Node.js 20+ from your PATH or Codex's bundled runtime.
 
 ```sh
 codex plugin marketplace add dicnunz/krea-codex-plugin

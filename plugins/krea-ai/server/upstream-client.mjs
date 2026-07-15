@@ -6,7 +6,7 @@ import { CALLBACK_HOST, CALLBACK_PATH, CALLBACK_PORT, UPSTREAM_URL } from "./con
 import { KeychainStore } from "./keychain-store.mjs";
 import { PersistentOAuthProvider } from "./oauth-provider.mjs";
 
-const createClient = () => new Client({ name: "krea-local-companion", version: "0.4.1" }, { capabilities: {} });
+const createClient = () => new Client({ name: "krea-local-companion", version: "0.4.2" }, { capabilities: {} });
 
 const waitForCallback = (provider, timeoutMs = 180_000) => new Promise((resolve, reject) => {
   const server = createServer(async (req, res) => {

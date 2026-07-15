@@ -18,9 +18,9 @@ assert.equal(manifest.version, pkg.version);
 assert.equal(manifest.apps, "./.app.json");
 assert.equal(manifest.mcpServers, "./.mcp.json");
 assert.match(app.apps.krea.id, /^asdk_app_[a-f0-9]+$/);
-assert.equal(mcp.mcpServers["krea-ai"].command, "node");
+assert.equal(mcp.mcpServers["krea-ai"].command, "/bin/sh");
 assert.equal(mcp.mcpServers["krea-ai"].cwd, ".");
-assert.deepEqual(mcp.mcpServers["krea-ai"].args, ["./dist/krea-companion.mjs", "stdio"]);
+assert.deepEqual(mcp.mcpServers["krea-ai"].args, ["./scripts/run-companion.sh", "stdio"]);
 assert.equal(marketplace.name, "krea-codex");
 const marketplacePlugin = marketplace.plugins.find(plugin => plugin.name === "krea-ai");
 assert.ok(marketplacePlugin);
@@ -39,6 +39,7 @@ for (const file of [
   "server/cli.mjs",
   "server/relay-stdio.mjs",
   "dist/krea-companion.mjs",
+  "scripts/run-companion.sh",
   "LICENSE",
   "THIRD_PARTY_NOTICES.txt",
   "../../README.md",

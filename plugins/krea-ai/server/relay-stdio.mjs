@@ -4,7 +4,7 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprot
 import { forceAsyncArguments, sanitizeResult, sanitizeTool, waitForJob, waitForJobTool } from "./proxy-core.mjs";
 
 export function createRelayServer(upstream) {
-  const server = new Server({ name: "krea-local-companion", version: "0.4.1" }, {
+  const server = new Server({ name: "krea-local-companion", version: "0.4.2" }, {
     capabilities: { tools: {} },
     instructions: "Use Krea submission tools asynchronously, preserve each returned job ID, and call wait_for_job before chaining the resulting original asset into another stage."
   });
