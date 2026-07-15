@@ -17262,7 +17262,7 @@ var PersistentOAuthProvider = class {
 };
 
 // server/upstream-client.mjs
-var createClient = () => new Client({ name: "krea-local-companion", version: "0.4.2" }, { capabilities: {} });
+var createClient = () => new Client({ name: "krea-local-companion", version: "0.4.3" }, { capabilities: {} });
 var waitForCallback = (provider, timeoutMs = 18e4) => new Promise((resolve, reject) => {
   const server = createServer(async (req, res) => {
     const url2 = new URL(req.url ?? "/", `http://${CALLBACK_HOST}:${CALLBACK_PORT}`);
@@ -18081,7 +18081,7 @@ async function waitForJob(client, { jobId, timeoutSeconds = 900, pollSeconds = 1
 
 // server/relay-stdio.mjs
 function createRelayServer(upstream) {
-  const server = new Server({ name: "krea-local-companion", version: "0.4.2" }, {
+  const server = new Server({ name: "krea-local-companion", version: "0.4.3" }, {
     capabilities: { tools: {} },
     instructions: "Use Krea submission tools asynchronously, preserve each returned job ID, and call wait_for_job before chaining the resulting original asset into another stage."
   });
