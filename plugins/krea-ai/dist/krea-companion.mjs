@@ -3490,49 +3490,49 @@ var require_schemes = __commonJS({
       wsComponent.fragment = void 0;
       return wsComponent;
     }
-    function urnParse(urnComponent, options) {
+    function urnParse(urnComponent, options2) {
       if (!urnComponent.path) {
         urnComponent.error = "URN can not be parsed";
         return urnComponent;
       }
       const matches = urnComponent.path.match(URN_REG);
       if (matches) {
-        const scheme = options.scheme || urnComponent.scheme || "urn";
+        const scheme = options2.scheme || urnComponent.scheme || "urn";
         urnComponent.nid = matches[1].toLowerCase();
         urnComponent.nss = matches[2];
-        const urnScheme = `${scheme}:${options.nid || urnComponent.nid}`;
+        const urnScheme = `${scheme}:${options2.nid || urnComponent.nid}`;
         const schemeHandler = getSchemeHandler(urnScheme);
         urnComponent.path = void 0;
         if (schemeHandler) {
-          urnComponent = schemeHandler.parse(urnComponent, options);
+          urnComponent = schemeHandler.parse(urnComponent, options2);
         }
       } else {
         urnComponent.error = urnComponent.error || "URN can not be parsed.";
       }
       return urnComponent;
     }
-    function urnSerialize(urnComponent, options) {
+    function urnSerialize(urnComponent, options2) {
       if (urnComponent.nid === void 0) {
         throw new Error("URN without nid cannot be serialized");
       }
-      const scheme = options.scheme || urnComponent.scheme || "urn";
+      const scheme = options2.scheme || urnComponent.scheme || "urn";
       const nid = urnComponent.nid.toLowerCase();
-      const urnScheme = `${scheme}:${options.nid || nid}`;
+      const urnScheme = `${scheme}:${options2.nid || nid}`;
       const schemeHandler = getSchemeHandler(urnScheme);
       if (schemeHandler) {
-        urnComponent = schemeHandler.serialize(urnComponent, options);
+        urnComponent = schemeHandler.serialize(urnComponent, options2);
       }
       const uriComponent = urnComponent;
       const nss = urnComponent.nss;
-      uriComponent.path = `${nid || options.nid}:${nss}`;
-      options.skipEscape = true;
+      uriComponent.path = `${nid || options2.nid}:${nss}`;
+      options2.skipEscape = true;
       return uriComponent;
     }
-    function urnuuidParse(urnComponent, options) {
+    function urnuuidParse(urnComponent, options2) {
       const uuidComponent = urnComponent;
       uuidComponent.uuid = uuidComponent.nss;
       uuidComponent.nss = void 0;
-      if (!options.tolerant && (!uuidComponent.uuid || !isUUID(uuidComponent.uuid))) {
+      if (!options2.tolerant && (!uuidComponent.uuid || !isUUID(uuidComponent.uuid))) {
         uuidComponent.error = uuidComponent.error || "UUID is not valid.";
       }
       return uuidComponent;
@@ -3632,30 +3632,30 @@ var require_fast_uri = __commonJS({
     "use strict";
     var { normalizeIPv6, removeDotSegments, recomposeAuthority, normalizePercentEncoding, normalizePathEncoding, escapePreservingEscapes, reescapeHostDelimiters, isIPv4, nonSimpleDomain } = require_utils();
     var { SCHEMES, getSchemeHandler } = require_schemes();
-    function normalize(uri, options) {
+    function normalize(uri, options2) {
       if (typeof uri === "string") {
         uri = /** @type {T} */
-        normalizeString(uri, options);
+        normalizeString(uri, options2);
       } else if (typeof uri === "object") {
         uri = /** @type {T} */
-        parse3(serialize(uri, options), options);
+        parse3(serialize(uri, options2), options2);
       }
       return uri;
     }
-    function resolve(baseURI, relativeURI, options) {
-      const schemelessOptions = options ? Object.assign({ scheme: "null" }, options) : { scheme: "null" };
+    function resolve(baseURI, relativeURI, options2) {
+      const schemelessOptions = options2 ? Object.assign({ scheme: "null" }, options2) : { scheme: "null" };
       const resolved = resolveComponent(parse3(baseURI, schemelessOptions), parse3(relativeURI, schemelessOptions), schemelessOptions, true);
       schemelessOptions.skipEscape = true;
       return serialize(resolved, schemelessOptions);
     }
-    function resolveComponent(base, relative, options, skipNormalization) {
+    function resolveComponent(base, relative, options2, skipNormalization) {
       const target = {};
       if (!skipNormalization) {
-        base = parse3(serialize(base, options), options);
-        relative = parse3(serialize(relative, options), options);
+        base = parse3(serialize(base, options2), options2);
+        relative = parse3(serialize(relative, options2), options2);
       }
-      options = options || {};
-      if (!options.tolerant && relative.scheme) {
+      options2 = options2 || {};
+      if (!options2.tolerant && relative.scheme) {
         target.scheme = relative.scheme;
         target.userinfo = relative.userinfo;
         target.host = relative.host;
@@ -3701,9 +3701,9 @@ var require_fast_uri = __commonJS({
       target.fragment = relative.fragment;
       return target;
     }
-    function equal(uriA, uriB, options) {
-      const normalizedA = normalizeComparableURI(uriA, options);
-      const normalizedB = normalizeComparableURI(uriB, options);
+    function equal(uriA, uriB, options2) {
+      const normalizedA = normalizeComparableURI(uriA, options2);
+      const normalizedB = normalizeComparableURI(uriB, options2);
       return normalizedA !== void 0 && normalizedB !== void 0 && normalizedA.toLowerCase() === normalizedB.toLowerCase();
     }
     function serialize(cmpts, opts) {
@@ -3723,12 +3723,12 @@ var require_fast_uri = __commonJS({
         secure: cmpts.secure,
         error: ""
       };
-      const options = Object.assign({}, opts);
+      const options2 = Object.assign({}, opts);
       const uriTokens = [];
-      const schemeHandler = getSchemeHandler(options.scheme || component.scheme);
-      if (schemeHandler && schemeHandler.serialize) schemeHandler.serialize(component, options);
+      const schemeHandler = getSchemeHandler(options2.scheme || component.scheme);
+      if (schemeHandler && schemeHandler.serialize) schemeHandler.serialize(component, options2);
       if (component.path !== void 0) {
-        if (!options.skipEscape) {
+        if (!options2.skipEscape) {
           component.path = escapePreservingEscapes(component.path);
           if (component.scheme !== void 0) {
             component.path = component.path.split("%3A").join(":");
@@ -3737,12 +3737,12 @@ var require_fast_uri = __commonJS({
           component.path = normalizePercentEncoding(component.path);
         }
       }
-      if (options.reference !== "suffix" && component.scheme) {
+      if (options2.reference !== "suffix" && component.scheme) {
         uriTokens.push(component.scheme, ":");
       }
       const authority = recomposeAuthority(component);
       if (authority !== void 0) {
-        if (options.reference !== "suffix") {
+        if (options2.reference !== "suffix") {
           uriTokens.push("//");
         }
         uriTokens.push(authority);
@@ -3752,7 +3752,7 @@ var require_fast_uri = __commonJS({
       }
       if (component.path !== void 0) {
         let s = component.path;
-        if (!options.absolutePath && (!schemeHandler || !schemeHandler.absolutePath)) {
+        if (!options2.absolutePath && (!schemeHandler || !schemeHandler.absolutePath)) {
           s = removeDotSegments(s);
         }
         if (authority === void 0 && s[0] === "/" && s[1] === "/") {
@@ -3779,7 +3779,7 @@ var require_fast_uri = __commonJS({
       return void 0;
     }
     function parseWithStatus(uri, opts) {
-      const options = Object.assign({}, opts);
+      const options2 = Object.assign({}, opts);
       const parsed = {
         scheme: void 0,
         userinfo: void 0,
@@ -3791,9 +3791,9 @@ var require_fast_uri = __commonJS({
       };
       let malformedAuthorityOrPort = false;
       let isIP = false;
-      if (options.reference === "suffix") {
-        if (options.scheme) {
-          uri = options.scheme + ":" + uri;
+      if (options2.reference === "suffix") {
+        if (options2.scheme) {
+          uri = options2.scheme + ":" + uri;
         } else {
           uri = "//" + uri;
         }
@@ -3834,12 +3834,12 @@ var require_fast_uri = __commonJS({
         } else {
           parsed.reference = "uri";
         }
-        if (options.reference && options.reference !== "suffix" && options.reference !== parsed.reference) {
-          parsed.error = parsed.error || "URI is not a " + options.reference + " reference.";
+        if (options2.reference && options2.reference !== "suffix" && options2.reference !== parsed.reference) {
+          parsed.error = parsed.error || "URI is not a " + options2.reference + " reference.";
         }
-        const schemeHandler = getSchemeHandler(options.scheme || parsed.scheme);
-        if (!options.unicodeSupport && (!schemeHandler || !schemeHandler.unicodeSupport)) {
-          if (parsed.host && (options.domainHost || schemeHandler && schemeHandler.domainHost) && isIP === false && nonSimpleDomain(parsed.host)) {
+        const schemeHandler = getSchemeHandler(options2.scheme || parsed.scheme);
+        if (!options2.unicodeSupport && (!schemeHandler || !schemeHandler.unicodeSupport)) {
+          if (parsed.host && (options2.domainHost || schemeHandler && schemeHandler.domainHost) && isIP === false && nonSimpleDomain(parsed.host)) {
             try {
               parsed.host = new URL("http://" + parsed.host).hostname;
             } catch (e) {
@@ -3868,7 +3868,7 @@ var require_fast_uri = __commonJS({
           }
         }
         if (schemeHandler && schemeHandler.parse) {
-          schemeHandler.parse(parsed, options);
+          schemeHandler.parse(parsed, options2);
         }
       } else {
         parsed.error = parsed.error || "URI can not be parsed.";
@@ -4404,10 +4404,10 @@ var require_core = __commonJS({
     Ajv2.ValidationError = validation_error_1.default;
     Ajv2.MissingRefError = ref_error_1.default;
     exports.default = Ajv2;
-    function checkOptions(checkOpts, options, msg, log = "error") {
+    function checkOptions(checkOpts, options2, msg, log = "error") {
       for (const key in checkOpts) {
         const opt = key;
-        if (opt in options)
+        if (opt in options2)
           this.logger[log](`${msg}: option ${key}. ${checkOpts[opt]}`);
       }
     }
@@ -11141,14 +11141,14 @@ var objectProcessor = (schema, ctx, _json, params) => {
 var unionProcessor = (schema, ctx, json, params) => {
   const def = schema._zod.def;
   const isExclusive = def.inclusive === false;
-  const options = def.options.map((x, i) => process2(x, ctx, {
+  const options2 = def.options.map((x, i) => process2(x, ctx, {
     ...params,
     path: [...params.path, isExclusive ? "oneOf" : "anyOf", i]
   }));
   if (isExclusive) {
-    json.oneOf = options;
+    json.oneOf = options2;
   } else {
-    json.anyOf = options;
+    json.anyOf = options2;
   }
 };
 var intersectionProcessor = (schema, ctx, json, params) => {
@@ -12005,10 +12005,10 @@ var ZodUnion = /* @__PURE__ */ $constructor("ZodUnion", (inst, def) => {
   inst._zod.processJSONSchema = (ctx, json, params) => unionProcessor(inst, ctx, json, params);
   inst.options = def.options;
 });
-function union(options, params) {
+function union(options2, params) {
   return new ZodUnion({
     type: "union",
-    options,
+    options: options2,
     ...util_exports.normalizeParams(params)
   });
 }
@@ -12016,10 +12016,10 @@ var ZodDiscriminatedUnion = /* @__PURE__ */ $constructor("ZodDiscriminatedUnion"
   ZodUnion.init(inst, def);
   $ZodDiscriminatedUnion.init(inst, def);
 });
-function discriminatedUnion(discriminator, options, params) {
+function discriminatedUnion(discriminator, options2, params) {
   return new ZodDiscriminatedUnion({
     type: "union",
-    options,
+    options: options2,
     discriminator,
     ...util_exports.normalizeParams(params)
   });
@@ -14186,11 +14186,11 @@ var Protocol = class {
         }
         await this.notification(notification, notificationOptions);
       },
-      sendRequest: async (r, resultSchema, options) => {
+      sendRequest: async (r, resultSchema, options2) => {
         if (abortController.signal.aborted) {
           throw new McpError(ErrorCode.ConnectionClosed, "Request was cancelled");
         }
-        const requestOptions = { ...options, relatedRequestId: request.id };
+        const requestOptions = { ...options2, relatedRequestId: request.id };
         if (relatedTaskId && !requestOptions.relatedTask) {
           requestOptions.relatedTask = { taskId: relatedTaskId };
         }
@@ -14359,11 +14359,11 @@ var Protocol = class {
    *
    * @experimental Use `client.experimental.tasks.requestStream()` to access this method.
    */
-  async *requestStream(request, resultSchema, options) {
-    const { task } = options ?? {};
+  async *requestStream(request, resultSchema, options2) {
+    const { task } = options2 ?? {};
     if (!task) {
       try {
-        const result = await this.request(request, resultSchema, options);
+        const result = await this.request(request, resultSchema, options2);
         yield { type: "result", result };
       } catch (error2) {
         yield {
@@ -14375,7 +14375,7 @@ var Protocol = class {
     }
     let taskId;
     try {
-      const createResult = await this.request(request, CreateTaskResultSchema, options);
+      const createResult = await this.request(request, CreateTaskResultSchema, options2);
       if (createResult.task) {
         taskId = createResult.task.taskId;
         yield { type: "taskCreated", task: createResult.task };
@@ -14383,11 +14383,11 @@ var Protocol = class {
         throw new McpError(ErrorCode.InternalError, "Task creation did not return a task");
       }
       while (true) {
-        const task2 = await this.getTask({ taskId }, options);
+        const task2 = await this.getTask({ taskId }, options2);
         yield { type: "taskStatus", task: task2 };
         if (isTerminal(task2.status)) {
           if (task2.status === "completed") {
-            const result = await this.getTaskResult({ taskId }, resultSchema, options);
+            const result = await this.getTaskResult({ taskId }, resultSchema, options2);
             yield { type: "result", result };
           } else if (task2.status === "failed") {
             yield {
@@ -14403,13 +14403,13 @@ var Protocol = class {
           return;
         }
         if (task2.status === "input_required") {
-          const result = await this.getTaskResult({ taskId }, resultSchema, options);
+          const result = await this.getTaskResult({ taskId }, resultSchema, options2);
           yield { type: "result", result };
           return;
         }
         const pollInterval = task2.pollInterval ?? this._options?.defaultTaskPollInterval ?? 1e3;
         await new Promise((resolve) => setTimeout(resolve, pollInterval));
-        options?.signal?.throwIfAborted();
+        options2?.signal?.throwIfAborted();
       }
     } catch (error2) {
       yield {
@@ -14423,8 +14423,8 @@ var Protocol = class {
    *
    * Do not use this method to emit notifications! Use notification() instead.
    */
-  request(request, resultSchema, options) {
-    const { relatedRequestId, resumptionToken, onresumptiontoken, task, relatedTask } = options ?? {};
+  request(request, resultSchema, options2) {
+    const { relatedRequestId, resumptionToken, onresumptiontoken, task, relatedTask } = options2 ?? {};
     return new Promise((resolve, reject) => {
       const earlyReject = (error2) => {
         reject(error2);
@@ -14444,15 +14444,15 @@ var Protocol = class {
           return;
         }
       }
-      options?.signal?.throwIfAborted();
+      options2?.signal?.throwIfAborted();
       const messageId = this._requestMessageId++;
       const jsonrpcRequest = {
         ...request,
         jsonrpc: "2.0",
         id: messageId
       };
-      if (options?.onprogress) {
-        this._progressHandlers.set(messageId, options.onprogress);
+      if (options2?.onprogress) {
+        this._progressHandlers.set(messageId, options2.onprogress);
         jsonrpcRequest.params = {
           ...request.params,
           _meta: {
@@ -14492,7 +14492,7 @@ var Protocol = class {
         reject(error2);
       };
       this._responseHandlers.set(messageId, (response) => {
-        if (options?.signal?.aborted) {
+        if (options2?.signal?.aborted) {
           return;
         }
         if (response instanceof Error) {
@@ -14509,12 +14509,12 @@ var Protocol = class {
           reject(error2);
         }
       });
-      options?.signal?.addEventListener("abort", () => {
-        cancel(options?.signal?.reason);
+      options2?.signal?.addEventListener("abort", () => {
+        cancel(options2?.signal?.reason);
       });
-      const timeout = options?.timeout ?? DEFAULT_REQUEST_TIMEOUT_MSEC;
+      const timeout = options2?.timeout ?? DEFAULT_REQUEST_TIMEOUT_MSEC;
       const timeoutHandler = () => cancel(McpError.fromError(ErrorCode.RequestTimeout, "Request timed out", { timeout }));
-      this._setupTimeout(messageId, timeout, options?.maxTotalTimeout, timeoutHandler, options?.resetTimeoutOnProgress ?? false);
+      this._setupTimeout(messageId, timeout, options2?.maxTotalTimeout, timeoutHandler, options2?.resetTimeoutOnProgress ?? false);
       const relatedTaskId = relatedTask?.taskId;
       if (relatedTaskId) {
         const responseResolver = (response) => {
@@ -14547,42 +14547,42 @@ var Protocol = class {
    *
    * @experimental Use `client.experimental.tasks.getTask()` to access this method.
    */
-  async getTask(params, options) {
-    return this.request({ method: "tasks/get", params }, GetTaskResultSchema, options);
+  async getTask(params, options2) {
+    return this.request({ method: "tasks/get", params }, GetTaskResultSchema, options2);
   }
   /**
    * Retrieves the result of a completed task.
    *
    * @experimental Use `client.experimental.tasks.getTaskResult()` to access this method.
    */
-  async getTaskResult(params, resultSchema, options) {
-    return this.request({ method: "tasks/result", params }, resultSchema, options);
+  async getTaskResult(params, resultSchema, options2) {
+    return this.request({ method: "tasks/result", params }, resultSchema, options2);
   }
   /**
    * Lists tasks, optionally starting from a pagination cursor.
    *
    * @experimental Use `client.experimental.tasks.listTasks()` to access this method.
    */
-  async listTasks(params, options) {
-    return this.request({ method: "tasks/list", params }, ListTasksResultSchema, options);
+  async listTasks(params, options2) {
+    return this.request({ method: "tasks/list", params }, ListTasksResultSchema, options2);
   }
   /**
    * Cancels a specific task.
    *
    * @experimental Use `client.experimental.tasks.cancelTask()` to access this method.
    */
-  async cancelTask(params, options) {
-    return this.request({ method: "tasks/cancel", params }, CancelTaskResultSchema, options);
+  async cancelTask(params, options2) {
+    return this.request({ method: "tasks/cancel", params }, CancelTaskResultSchema, options2);
   }
   /**
    * Emits a notification, which is a one-way message that does not expect a response.
    */
-  async notification(notification, options) {
+  async notification(notification, options2) {
     if (!this._transport) {
       throw new Error("Not connected");
     }
     this.assertNotificationCapability(notification.method);
-    const relatedTaskId = options?.relatedTask?.taskId;
+    const relatedTaskId = options2?.relatedTask?.taskId;
     if (relatedTaskId) {
       const jsonrpcNotification2 = {
         ...notification,
@@ -14591,7 +14591,7 @@ var Protocol = class {
           ...notification.params,
           _meta: {
             ...notification.params?._meta || {},
-            [RELATED_TASK_META_KEY]: options.relatedTask
+            [RELATED_TASK_META_KEY]: options2.relatedTask
           }
         }
       };
@@ -14603,7 +14603,7 @@ var Protocol = class {
       return;
     }
     const debouncedMethods = this._options?.debouncedNotificationMethods ?? [];
-    const canDebounce = debouncedMethods.includes(notification.method) && !notification.params && !options?.relatedRequestId && !options?.relatedTask;
+    const canDebounce = debouncedMethods.includes(notification.method) && !notification.params && !options2?.relatedRequestId && !options2?.relatedTask;
     if (canDebounce) {
       if (this._pendingDebouncedNotifications.has(notification.method)) {
         return;
@@ -14618,19 +14618,19 @@ var Protocol = class {
           ...notification,
           jsonrpc: "2.0"
         };
-        if (options?.relatedTask) {
+        if (options2?.relatedTask) {
           jsonrpcNotification2 = {
             ...jsonrpcNotification2,
             params: {
               ...jsonrpcNotification2.params,
               _meta: {
                 ...jsonrpcNotification2.params?._meta || {},
-                [RELATED_TASK_META_KEY]: options.relatedTask
+                [RELATED_TASK_META_KEY]: options2.relatedTask
               }
             }
           };
         }
-        this._transport?.send(jsonrpcNotification2, options).catch((error2) => this._onerror(error2));
+        this._transport?.send(jsonrpcNotification2, options2).catch((error2) => this._onerror(error2));
       });
       return;
     }
@@ -14638,19 +14638,19 @@ var Protocol = class {
       ...notification,
       jsonrpc: "2.0"
     };
-    if (options?.relatedTask) {
+    if (options2?.relatedTask) {
       jsonrpcNotification = {
         ...jsonrpcNotification,
         params: {
           ...jsonrpcNotification.params,
           _meta: {
             ...jsonrpcNotification.params?._meta || {},
-            [RELATED_TASK_META_KEY]: options.relatedTask
+            [RELATED_TASK_META_KEY]: options2.relatedTask
           }
         }
       };
     }
-    await this._transport.send(jsonrpcNotification, options);
+    await this._transport.send(jsonrpcNotification, options2);
   }
   /**
    * Registers a handler to invoke when this protocol object receives a request with the given method.
@@ -14971,13 +14971,13 @@ var ExperimentalClientTasks = class {
    *
    * @experimental
    */
-  async *callToolStream(params, resultSchema = CallToolResultSchema, options) {
+  async *callToolStream(params, resultSchema = CallToolResultSchema, options2) {
     const clientInternal = this._client;
     const optionsWithTask = {
-      ...options,
+      ...options2,
       // We check if the tool is known to be a task during auto-configuration, but assume
       // the caller knows what they're doing if they pass this explicitly
-      task: options?.task ?? (clientInternal.isToolTask(params.name) ? {} : void 0)
+      task: options2?.task ?? (clientInternal.isToolTask(params.name) ? {} : void 0)
     };
     const stream = clientInternal.requestStream({ method: "tools/call", params }, resultSchema, optionsWithTask);
     const validator = clientInternal.getToolOutputValidator(params.name);
@@ -15026,8 +15026,8 @@ var ExperimentalClientTasks = class {
    *
    * @experimental
    */
-  async getTask(taskId, options) {
-    return this._client.getTask({ taskId }, options);
+  async getTask(taskId, options2) {
+    return this._client.getTask({ taskId }, options2);
   }
   /**
    * Retrieves the result of a completed task.
@@ -15039,8 +15039,8 @@ var ExperimentalClientTasks = class {
    *
    * @experimental
    */
-  async getTaskResult(taskId, resultSchema, options) {
-    return this._client.getTaskResult({ taskId }, resultSchema, options);
+  async getTaskResult(taskId, resultSchema, options2) {
+    return this._client.getTaskResult({ taskId }, resultSchema, options2);
   }
   /**
    * Lists tasks with optional pagination.
@@ -15051,8 +15051,8 @@ var ExperimentalClientTasks = class {
    *
    * @experimental
    */
-  async listTasks(cursor, options) {
-    return this._client.listTasks(cursor ? { cursor } : void 0, options);
+  async listTasks(cursor, options2) {
+    return this._client.listTasks(cursor ? { cursor } : void 0, options2);
   }
   /**
    * Cancels a running task.
@@ -15062,8 +15062,8 @@ var ExperimentalClientTasks = class {
    *
    * @experimental
    */
-  async cancelTask(taskId, options) {
-    return this._client.cancelTask({ taskId }, options);
+  async cancelTask(taskId, options2) {
+    return this._client.cancelTask({ taskId }, options2);
   }
   /**
    * Sends a request and returns an AsyncGenerator that yields response messages.
@@ -15079,8 +15079,8 @@ var ExperimentalClientTasks = class {
    *
    * @experimental
    */
-  requestStream(request, resultSchema, options) {
-    return this._client.requestStream(request, resultSchema, options);
+  requestStream(request, resultSchema, options2) {
+    return this._client.requestStream(request, resultSchema, options2);
   }
 };
 
@@ -15165,17 +15165,17 @@ var Client = class extends Protocol {
   /**
    * Initializes this client with the given name and version information.
    */
-  constructor(_clientInfo, options) {
-    super(options);
+  constructor(_clientInfo, options2) {
+    super(options2);
     this._clientInfo = _clientInfo;
     this._cachedToolOutputValidators = /* @__PURE__ */ new Map();
     this._cachedKnownTaskTools = /* @__PURE__ */ new Set();
     this._cachedRequiredTaskTools = /* @__PURE__ */ new Set();
     this._listChangedDebounceTimers = /* @__PURE__ */ new Map();
-    this._capabilities = options?.capabilities ?? {};
-    this._jsonSchemaValidator = options?.jsonSchemaValidator ?? new AjvJsonSchemaValidator();
-    if (options?.listChanged) {
-      this._pendingListChangedConfig = options.listChanged;
+    this._capabilities = options2?.capabilities ?? {};
+    this._jsonSchemaValidator = options2?.jsonSchemaValidator ?? new AjvJsonSchemaValidator();
+    if (options2?.listChanged) {
+      this._pendingListChangedConfig = options2.listChanged;
     }
   }
   /**
@@ -15332,7 +15332,7 @@ var Client = class extends Protocol {
       throw new Error(`Server does not support ${capability} (required for ${method})`);
     }
   }
-  async connect(transport, options) {
+  async connect(transport, options2) {
     await super.connect(transport);
     if (transport.sessionId !== void 0) {
       return;
@@ -15345,7 +15345,7 @@ var Client = class extends Protocol {
           capabilities: this._capabilities,
           clientInfo: this._clientInfo
         }
-      }, InitializeResultSchema, options);
+      }, InitializeResultSchema, options2);
       if (result === void 0) {
         throw new Error(`Server sent invalid initialize result: ${result}`);
       }
@@ -15486,46 +15486,46 @@ var Client = class extends Protocol {
     }
     assertClientRequestTaskCapability(this._capabilities.tasks?.requests, method, "Client");
   }
-  async ping(options) {
-    return this.request({ method: "ping" }, EmptyResultSchema, options);
+  async ping(options2) {
+    return this.request({ method: "ping" }, EmptyResultSchema, options2);
   }
-  async complete(params, options) {
-    return this.request({ method: "completion/complete", params }, CompleteResultSchema, options);
+  async complete(params, options2) {
+    return this.request({ method: "completion/complete", params }, CompleteResultSchema, options2);
   }
-  async setLoggingLevel(level, options) {
-    return this.request({ method: "logging/setLevel", params: { level } }, EmptyResultSchema, options);
+  async setLoggingLevel(level, options2) {
+    return this.request({ method: "logging/setLevel", params: { level } }, EmptyResultSchema, options2);
   }
-  async getPrompt(params, options) {
-    return this.request({ method: "prompts/get", params }, GetPromptResultSchema, options);
+  async getPrompt(params, options2) {
+    return this.request({ method: "prompts/get", params }, GetPromptResultSchema, options2);
   }
-  async listPrompts(params, options) {
-    return this.request({ method: "prompts/list", params }, ListPromptsResultSchema, options);
+  async listPrompts(params, options2) {
+    return this.request({ method: "prompts/list", params }, ListPromptsResultSchema, options2);
   }
-  async listResources(params, options) {
-    return this.request({ method: "resources/list", params }, ListResourcesResultSchema, options);
+  async listResources(params, options2) {
+    return this.request({ method: "resources/list", params }, ListResourcesResultSchema, options2);
   }
-  async listResourceTemplates(params, options) {
-    return this.request({ method: "resources/templates/list", params }, ListResourceTemplatesResultSchema, options);
+  async listResourceTemplates(params, options2) {
+    return this.request({ method: "resources/templates/list", params }, ListResourceTemplatesResultSchema, options2);
   }
-  async readResource(params, options) {
-    return this.request({ method: "resources/read", params }, ReadResourceResultSchema, options);
+  async readResource(params, options2) {
+    return this.request({ method: "resources/read", params }, ReadResourceResultSchema, options2);
   }
-  async subscribeResource(params, options) {
-    return this.request({ method: "resources/subscribe", params }, EmptyResultSchema, options);
+  async subscribeResource(params, options2) {
+    return this.request({ method: "resources/subscribe", params }, EmptyResultSchema, options2);
   }
-  async unsubscribeResource(params, options) {
-    return this.request({ method: "resources/unsubscribe", params }, EmptyResultSchema, options);
+  async unsubscribeResource(params, options2) {
+    return this.request({ method: "resources/unsubscribe", params }, EmptyResultSchema, options2);
   }
   /**
    * Calls a tool and waits for the result. Automatically validates structured output if the tool has an outputSchema.
    *
    * For task-based execution with streaming behavior, use client.experimental.tasks.callToolStream() instead.
    */
-  async callTool(params, resultSchema = CallToolResultSchema, options) {
+  async callTool(params, resultSchema = CallToolResultSchema, options2) {
     if (this.isToolTaskRequired(params.name)) {
       throw new McpError(ErrorCode.InvalidRequest, `Tool "${params.name}" requires task-based execution. Use client.experimental.tasks.callToolStream() instead.`);
     }
-    const result = await this.request({ method: "tools/call", params }, resultSchema, options);
+    const result = await this.request({ method: "tools/call", params }, resultSchema, options2);
     const validator = this.getToolOutputValidator(params.name);
     if (validator) {
       if (!result.structuredContent && !result.isError) {
@@ -15588,8 +15588,8 @@ var Client = class extends Protocol {
   getToolOutputValidator(toolName) {
     return this._cachedToolOutputValidators.get(toolName);
   }
-  async listTools(params, options) {
-    const result = await this.request({ method: "tools/list", params }, ListToolsResultSchema, options);
+  async listTools(params, options2) {
+    const result = await this.request({ method: "tools/list", params }, ListToolsResultSchema, options2);
     this.cacheToolMetadata(result.tools);
     return result;
   }
@@ -15597,16 +15597,16 @@ var Client = class extends Protocol {
    * Set up a single list changed handler.
    * @internal
    */
-  _setupListChangedHandler(listType, notificationSchema, options, fetcher) {
-    const parseResult = ListChangedOptionsBaseSchema.safeParse(options);
+  _setupListChangedHandler(listType, notificationSchema, options2, fetcher) {
+    const parseResult = ListChangedOptionsBaseSchema.safeParse(options2);
     if (!parseResult.success) {
       throw new Error(`Invalid ${listType} listChanged options: ${parseResult.error.message}`);
     }
-    if (typeof options.onChanged !== "function") {
+    if (typeof options2.onChanged !== "function") {
       throw new Error(`Invalid ${listType} listChanged options: onChanged must be a function`);
     }
     const { autoRefresh, debounceMs } = parseResult.data;
-    const { onChanged } = options;
+    const { onChanged } = options2;
     const refresh = async () => {
       if (!autoRefresh) {
         onChanged(null, null);
@@ -16043,16 +16043,16 @@ async function parseErrorResponse(input) {
     return new ServerError(errorMessage);
   }
 }
-async function auth(provider, options) {
+async function auth(provider, options2) {
   try {
-    return await authInternal(provider, options);
+    return await authInternal(provider, options2);
   } catch (error2) {
     if (error2 instanceof InvalidClientError || error2 instanceof UnauthorizedClientError) {
       await provider.invalidateCredentials?.("all");
-      return await authInternal(provider, options);
+      return await authInternal(provider, options2);
     } else if (error2 instanceof InvalidGrantError) {
       await provider.invalidateCredentials?.("tokens");
-      return await authInternal(provider, options);
+      return await authInternal(provider, options2);
     }
     throw error2;
   }
@@ -16261,11 +16261,11 @@ async function fetchWithCorsRetry(url2, headers, fetchFn = fetch) {
     throw error2;
   }
 }
-function buildWellKnownPath(wellKnownPrefix, pathname = "", options = {}) {
+function buildWellKnownPath(wellKnownPrefix, pathname = "", options2 = {}) {
   if (pathname.endsWith("/")) {
     pathname = pathname.slice(0, -1);
   }
-  return options.prependPathname ? `${pathname}/.well-known/${wellKnownPrefix}` : `/.well-known/${wellKnownPrefix}${pathname}`;
+  return options2.prependPathname ? `${pathname}/.well-known/${wellKnownPrefix}` : `/.well-known/${wellKnownPrefix}${pathname}`;
 }
 async function tryMetadataDiscovery(url2, protocolVersion, fetchFn = fetch) {
   const headers = {
@@ -16511,8 +16511,8 @@ async function registerClient(authorizationServerUrl, { metadata, clientMetadata
 
 // node_modules/eventsource-parser/dist/index.js
 var ParseError = class extends Error {
-  constructor(message, options) {
-    super(message), this.name = "ParseError", this.type = options.type, this.field = options.field, this.value = options.value, this.line = options.line;
+  constructor(message, options2) {
+    super(message), this.name = "ParseError", this.type = options2.type, this.field = options2.field, this.value = options2.value, this.line = options2.line;
   }
 };
 var LF = 10;
@@ -16669,8 +16669,8 @@ ${value}`, dataLines++;
       data
     }), id = void 0, data = "", dataLines = 0, eventType = void 0;
   }
-  function reset(options = {}) {
-    if (options.consume && pendingFragments.length > 0) {
+  function reset(options2 = {}) {
+    if (options2.consume && pendingFragments.length > 0) {
       const incompleteLine = pendingFragments.join("");
       parseLine(incompleteLine, 0, incompleteLine.length);
     }
@@ -16777,8 +16777,8 @@ var StreamableHTTPClientTransport = class {
       ...extraHeaders
     });
   }
-  async _startOrAuthSse(options) {
-    const { resumptionToken } = options;
+  async _startOrAuthSse(options2) {
+    const { resumptionToken } = options2;
     try {
       const headers = await this._commonHeaders();
       headers.set("Accept", "text/event-stream");
@@ -16800,7 +16800,7 @@ var StreamableHTTPClientTransport = class {
         }
         throw new StreamableHTTPError(response.status, `Failed to open SSE stream: ${response.statusText}`);
       }
-      this._handleSseStream(response.body, options, true);
+      this._handleSseStream(response.body, options2, true);
     } catch (error2) {
       this.onerror?.(error2);
       throw error2;
@@ -16827,7 +16827,7 @@ var StreamableHTTPClientTransport = class {
    * @param lastEventId The ID of the last received event for resumability
    * @param attemptCount Current reconnection attempt count for this specific stream
    */
-  _scheduleReconnection(options, attemptCount = 0) {
+  _scheduleReconnection(options2, attemptCount = 0) {
     const maxRetries = this._reconnectionOptions.maxRetries;
     if (attemptCount >= maxRetries) {
       this.onerror?.(new Error(`Maximum reconnection attempts (${maxRetries}) exceeded.`));
@@ -16835,17 +16835,17 @@ var StreamableHTTPClientTransport = class {
     }
     const delay = this._getNextReconnectionDelay(attemptCount);
     this._reconnectionTimeout = setTimeout(() => {
-      this._startOrAuthSse(options).catch((error2) => {
+      this._startOrAuthSse(options2).catch((error2) => {
         this.onerror?.(new Error(`Failed to reconnect SSE stream: ${error2 instanceof Error ? error2.message : String(error2)}`));
-        this._scheduleReconnection(options, attemptCount + 1);
+        this._scheduleReconnection(options2, attemptCount + 1);
       });
     }, delay);
   }
-  _handleSseStream(stream, options, isReconnectable) {
+  _handleSseStream(stream, options2, isReconnectable) {
     if (!stream) {
       return;
     }
-    const { onresumptiontoken, replayMessageId } = options;
+    const { onresumptiontoken, replayMessageId } = options2;
     let lastEventId;
     let hasPrimingEvent = false;
     let receivedResponse = false;
@@ -16944,9 +16944,9 @@ var StreamableHTTPClientTransport = class {
     this._abortController?.abort();
     this.onclose?.();
   }
-  async send(message, options) {
+  async send(message, options2) {
     try {
-      const { resumptionToken, onresumptiontoken } = options || {};
+      const { resumptionToken, onresumptiontoken } = options2 || {};
       if (resumptionToken) {
         this._startOrAuthSse({ resumptionToken, replayMessageId: isJSONRPCRequest(message) ? message.id : void 0 }).catch((err) => this.onerror?.(err));
         return;
@@ -17098,10 +17098,10 @@ var StreamableHTTPClientTransport = class {
    * @param lastEventId The event ID to resume from
    * @param options Optional callback to receive new resumption tokens
    */
-  async resumeStream(lastEventId, options) {
+  async resumeStream(lastEventId, options2) {
     await this._startOrAuthSse({
       resumptionToken: lastEventId,
-      onresumptiontoken: options?.onresumptiontoken
+      onresumptiontoken: options2?.onresumptiontoken
     });
   }
 };
@@ -17182,9 +17182,10 @@ import { randomBytes } from "node:crypto";
 import { promisify as promisify2 } from "node:util";
 var execFileAsync2 = promisify2(execFile2);
 var PersistentOAuthProvider = class {
-  constructor(store, { openBrowser = true } = {}) {
+  constructor(store, { openBrowser = true, displayAuthorizationUrl = true } = {}) {
     this.store = store;
     this.openBrowser = openBrowser;
+    this.displayAuthorizationUrl = displayAuthorizationUrl;
     this.pendingAuthorizationUrl = void 0;
   }
   get redirectUrl() {
@@ -17220,7 +17221,7 @@ var PersistentOAuthProvider = class {
   async redirectToAuthorization(authorizationUrl) {
     this.pendingAuthorizationUrl = authorizationUrl;
     if (this.openBrowser) await execFileAsync2("open", [authorizationUrl.toString()]);
-    else process.stderr.write(`KREA_AUTH_URL=${authorizationUrl.toString()}
+    else if (this.displayAuthorizationUrl) process.stderr.write(`KREA_AUTH_URL=${authorizationUrl.toString()}
 `);
   }
   async saveCodeVerifier(codeVerifier) {
@@ -17296,7 +17297,7 @@ var waitForCallback = (provider, timeoutMs = 18e4) => new Promise((resolve, reje
 });
 var transportFor = (provider) => new StreamableHTTPClientTransport(new URL(UPSTREAM_URL), { authProvider: provider });
 async function connectUpstream({ interactive = false, openBrowser = interactive, store = new KeychainStore() } = {}) {
-  const provider = new PersistentOAuthProvider(store, { openBrowser });
+  const provider = new PersistentOAuthProvider(store, { openBrowser, displayAuthorizationUrl: interactive });
   let client = createClient();
   let transport = transportFor(provider);
   try {
@@ -17338,8 +17339,8 @@ var ExperimentalServerTasks = class {
    *
    * @experimental
    */
-  requestStream(request, resultSchema, options) {
-    return this._server.requestStream(request, resultSchema, options);
+  requestStream(request, resultSchema, options2) {
+    return this._server.requestStream(request, resultSchema, options2);
   }
   /**
    * Sends a sampling request and returns an AsyncGenerator that yields response messages.
@@ -17384,7 +17385,7 @@ var ExperimentalServerTasks = class {
    *
    * @experimental
    */
-  createMessageStream(params, options) {
+  createMessageStream(params, options2) {
     const clientCapabilities = this._server.getClientCapabilities();
     if ((params.tools || params.toolChoice) && !clientCapabilities?.sampling?.tools) {
       throw new Error("Client does not support sampling tools capability.");
@@ -17415,7 +17416,7 @@ var ExperimentalServerTasks = class {
     return this.requestStream({
       method: "sampling/createMessage",
       params
-    }, CreateMessageResultSchema, options);
+    }, CreateMessageResultSchema, options2);
   }
   /**
    * Sends an elicitation request and returns an AsyncGenerator that yields response messages.
@@ -17459,7 +17460,7 @@ var ExperimentalServerTasks = class {
    *
    * @experimental
    */
-  elicitInputStream(params, options) {
+  elicitInputStream(params, options2) {
     const clientCapabilities = this._server.getClientCapabilities();
     const mode = params.mode ?? "form";
     switch (mode) {
@@ -17480,7 +17481,7 @@ var ExperimentalServerTasks = class {
     return this.requestStream({
       method: "elicitation/create",
       params: normalizedParams
-    }, ElicitResultSchema, options);
+    }, ElicitResultSchema, options2);
   }
   /**
    * Gets the current status of a task.
@@ -17491,8 +17492,8 @@ var ExperimentalServerTasks = class {
    *
    * @experimental
    */
-  async getTask(taskId, options) {
-    return this._server.getTask({ taskId }, options);
+  async getTask(taskId, options2) {
+    return this._server.getTask({ taskId }, options2);
   }
   /**
    * Retrieves the result of a completed task.
@@ -17504,8 +17505,8 @@ var ExperimentalServerTasks = class {
    *
    * @experimental
    */
-  async getTaskResult(taskId, resultSchema, options) {
-    return this._server.getTaskResult({ taskId }, resultSchema, options);
+  async getTaskResult(taskId, resultSchema, options2) {
+    return this._server.getTaskResult({ taskId }, resultSchema, options2);
   }
   /**
    * Lists tasks with optional pagination.
@@ -17516,8 +17517,8 @@ var ExperimentalServerTasks = class {
    *
    * @experimental
    */
-  async listTasks(cursor, options) {
-    return this._server.listTasks(cursor ? { cursor } : void 0, options);
+  async listTasks(cursor, options2) {
+    return this._server.listTasks(cursor ? { cursor } : void 0, options2);
   }
   /**
    * Cancels a running task.
@@ -17527,8 +17528,8 @@ var ExperimentalServerTasks = class {
    *
    * @experimental
    */
-  async cancelTask(taskId, options) {
-    return this._server.cancelTask({ taskId }, options);
+  async cancelTask(taskId, options2) {
+    return this._server.cancelTask({ taskId }, options2);
   }
 };
 
@@ -17537,8 +17538,8 @@ var Server = class extends Protocol {
   /**
    * Initializes this server with the given name and version information.
    */
-  constructor(_serverInfo, options) {
-    super(options);
+  constructor(_serverInfo, options2) {
+    super(options2);
     this._serverInfo = _serverInfo;
     this._loggingLevels = /* @__PURE__ */ new Map();
     this.LOG_LEVEL_SEVERITY = new Map(LoggingLevelSchema.options.map((level, index) => [level, index]));
@@ -17546,9 +17547,9 @@ var Server = class extends Protocol {
       const currentLevel = this._loggingLevels.get(sessionId);
       return currentLevel ? this.LOG_LEVEL_SEVERITY.get(level) < this.LOG_LEVEL_SEVERITY.get(currentLevel) : false;
     };
-    this._capabilities = options?.capabilities ?? {};
-    this._instructions = options?.instructions;
-    this._jsonSchemaValidator = options?.jsonSchemaValidator ?? new AjvJsonSchemaValidator();
+    this._capabilities = options2?.capabilities ?? {};
+    this._instructions = options2?.instructions;
+    this._jsonSchemaValidator = options2?.jsonSchemaValidator ?? new AjvJsonSchemaValidator();
     this.setRequestHandler(InitializeRequestSchema, (request) => this._oninitialize(request));
     this.setNotificationHandler(InitializedNotificationSchema, () => this.oninitialized?.());
     if (this._capabilities.logging) {
@@ -17782,7 +17783,7 @@ var Server = class extends Protocol {
     return this.request({ method: "ping" }, EmptyResultSchema);
   }
   // Implementation
-  async createMessage(params, options) {
+  async createMessage(params, options2) {
     if (params.tools || params.toolChoice) {
       if (!this._clientCapabilities?.sampling?.tools) {
         throw new Error("Client does not support sampling tools capability.");
@@ -17812,9 +17813,9 @@ var Server = class extends Protocol {
       }
     }
     if (params.tools) {
-      return this.request({ method: "sampling/createMessage", params }, CreateMessageResultWithToolsSchema, options);
+      return this.request({ method: "sampling/createMessage", params }, CreateMessageResultWithToolsSchema, options2);
     }
-    return this.request({ method: "sampling/createMessage", params }, CreateMessageResultSchema, options);
+    return this.request({ method: "sampling/createMessage", params }, CreateMessageResultSchema, options2);
   }
   /**
    * Creates an elicitation request for the given parameters.
@@ -17823,7 +17824,7 @@ var Server = class extends Protocol {
    * @param options Optional request options.
    * @returns The result of the elicitation request.
    */
-  async elicitInput(params, options) {
+  async elicitInput(params, options2) {
     const mode = params.mode ?? "form";
     switch (mode) {
       case "url": {
@@ -17831,14 +17832,14 @@ var Server = class extends Protocol {
           throw new Error("Client does not support url elicitation.");
         }
         const urlParams = params;
-        return this.request({ method: "elicitation/create", params: urlParams }, ElicitResultSchema, options);
+        return this.request({ method: "elicitation/create", params: urlParams }, ElicitResultSchema, options2);
       }
       case "form": {
         if (!this._clientCapabilities?.elicitation?.form) {
           throw new Error("Client does not support form elicitation.");
         }
         const formParams = params.mode === "form" ? params : { ...params, mode: "form" };
-        const result = await this.request({ method: "elicitation/create", params: formParams }, ElicitResultSchema, options);
+        const result = await this.request({ method: "elicitation/create", params: formParams }, ElicitResultSchema, options2);
         if (result.action === "accept" && result.content && formParams.requestedSchema) {
           try {
             const validator = this._jsonSchemaValidator.getValidator(formParams.requestedSchema);
@@ -17865,7 +17866,7 @@ var Server = class extends Protocol {
    * @param options Optional notification options. Useful when the completion notification should be related to a prior request.
    * @returns A function that emits the completion notification when awaited.
    */
-  createElicitationCompletionNotifier(elicitationId, options) {
+  createElicitationCompletionNotifier(elicitationId, options2) {
     if (!this._clientCapabilities?.elicitation?.url) {
       throw new Error("Client does not support URL elicitation (required for notifications/elicitation/complete)");
     }
@@ -17874,10 +17875,10 @@ var Server = class extends Protocol {
       params: {
         elicitationId
       }
-    }, options);
+    }, options2);
   }
-  async listRoots(params, options) {
-    return this.request({ method: "roots/list", params }, ListRootsResultSchema, options);
+  async listRoots(params, options2) {
+    return this.request({ method: "roots/list", params }, ListRootsResultSchema, options2);
   }
   /**
    * Sends a logging message to the client, if connected.
@@ -18035,7 +18036,7 @@ var waitForJobTool = {
   inputSchema: {
     type: "object",
     properties: {
-      jobId: { type: "string", description: "Job ID returned by a Krea submission tool" },
+      jobId: { type: "string", minLength: 1, pattern: "\\S", description: "Job ID returned by a Krea submission tool" },
       timeoutSeconds: { type: "integer", minimum: 1, maximum: 3600, default: 900 },
       pollSeconds: { type: "integer", minimum: 2, maximum: 60, default: 10 }
     },
@@ -18044,40 +18045,86 @@ var waitForJobTool = {
   },
   annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
 };
-var extractJob = (result) => result?.structuredContent ?? (() => {
-  const text = result?.content?.find((item) => item.type === "text")?.text;
-  if (!text) return void 0;
-  try {
-    return JSON.parse(text);
-  } catch {
-    return void 0;
+var isRecord = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+var InvalidWaitArgumentsError = class extends TypeError {
+};
+function validateWaitArguments(args) {
+  if (!isRecord(args)) throw new InvalidWaitArgumentsError("wait_for_job requires an arguments object with a jobId.");
+  if (Object.keys(args).some((key) => !Object.hasOwn(waitForJobTool.inputSchema.properties, key))) {
+    throw new InvalidWaitArgumentsError("wait_for_job accepts only jobId, timeoutSeconds, and pollSeconds.");
   }
-})();
-async function waitForJob(client, { jobId, timeoutSeconds = 900, pollSeconds = 10 }, { sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)) } = {}) {
-  const started = Date.now();
-  const deadline = started + timeoutSeconds * 1e3;
-  let latest;
-  while (Date.now() <= deadline) {
-    latest = sanitizeResult(await client.callTool({ name: "get_job", arguments: { jobId } }));
-    const job2 = extractJob(latest);
-    const status = String(job2?.status ?? "unknown").toLowerCase();
-    if (TERMINAL_STATUSES.has(status)) return latest;
-    const remaining = deadline - Date.now();
+  if (typeof args.jobId !== "string" || !args.jobId.trim()) {
+    throw new InvalidWaitArgumentsError("jobId must be a non-empty string returned by a Krea submission tool.");
+  }
+  for (const key of ["timeoutSeconds", "pollSeconds"]) {
+    const { minimum, maximum } = waitForJobTool.inputSchema.properties[key];
+    if (args[key] !== void 0 && (!Number.isInteger(args[key]) || args[key] < minimum || args[key] > maximum)) {
+      throw new InvalidWaitArgumentsError(`${key} must be an integer from ${minimum} to ${maximum}.`);
+    }
+  }
+}
+function extractJob(result) {
+  if (!isRecord(result)) return void 0;
+  let job = result.structuredContent;
+  if (job === void 0 && Array.isArray(result.content)) {
+    const text = result.content.find((item) => item?.type === "text")?.text;
+    if (typeof text !== "string") return void 0;
+    try {
+      job = JSON.parse(text);
+    } catch {
+      return void 0;
+    }
+  }
+  return isRecord(job) && typeof job.status === "string" && job.status.trim() ? job : void 0;
+}
+var WAIT_ERRORS = {
+  request_failed: "The get_job request could not complete. Check the connection and authorization before resuming.",
+  upstream_error: "Krea returned a tool error for get_job. Check authorization with the companion's doctor command before resuming.",
+  invalid_response: "Krea returned an unreadable job status. Resume later with the same jobId; the job's current state could not be confirmed."
+};
+function resumableWaitResult(jobId, job, errorCode) {
+  const payload = {
+    ...job,
+    job_id: jobId,
+    status: job?.status ?? "unknown",
+    ...errorCode ? { waiting_interrupted: true, waiting_error: { code: errorCode, message: WAIT_ERRORS[errorCode] } } : { waiting_timed_out: true },
+    message: `${errorCode ? WAIT_ERRORS[errorCode] : "The local waiting window ended."} This does not mean the Krea job failed. The job was not resubmitted. Call wait_for_job again with the same jobId to resume.`,
+    resume: { tool: "wait_for_job", arguments: { jobId } }
+  };
+  return {
+    ...errorCode ? { isError: true } : {},
+    content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+    structuredContent: payload
+  };
+}
+async function waitForJob(client, args, {
+  sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+  now = () => performance.now()
+} = {}) {
+  validateWaitArguments(args);
+  const { jobId, timeoutSeconds = 900, pollSeconds = 10 } = args;
+  const deadline = now() + timeoutSeconds * 1e3;
+  let latestJob;
+  while (now() < deadline) {
+    let result;
+    try {
+      result = await client.callTool({ name: "get_job", arguments: { jobId } }, void 0, {
+        timeout: Math.max(1, Math.min(6e4, Math.ceil(deadline - now())))
+      });
+    } catch {
+      if (now() >= deadline) break;
+      return resumableWaitResult(jobId, latestJob, "request_failed");
+    }
+    if (result?.isError) return resumableWaitResult(jobId, latestJob, "upstream_error");
+    const job = extractJob(result);
+    if (!job) return resumableWaitResult(jobId, latestJob, "invalid_response");
+    latestJob = job;
+    if (TERMINAL_STATUSES.has(job.status.trim().toLowerCase())) return sanitizeResult(result);
+    const remaining = deadline - now();
     if (remaining <= 0) break;
     await sleep(Math.min(pollSeconds * 1e3, remaining));
   }
-  const job = extractJob(latest) ?? { job_id: jobId, status: "processing" };
-  return {
-    content: [{
-      type: "text",
-      text: JSON.stringify({
-        ...job,
-        waiting_timed_out: true,
-        message: "The local waiting window ended, but the Krea job was not resubmitted. Call wait_for_job again with the same jobId to resume."
-      }, null, 2)
-    }],
-    structuredContent: { ...job, waiting_timed_out: true }
-  };
+  return resumableWaitResult(jobId, latestJob);
 }
 
 // server/relay-stdio.mjs
@@ -18092,7 +18139,14 @@ function createRelayServer(upstream) {
   });
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name, arguments: args = {} } = request.params;
-    if (name === waitForJobTool.name) return waitForJob(upstream, args);
+    if (name === waitForJobTool.name) {
+      try {
+        return await waitForJob(upstream, args);
+      } catch (error2) {
+        if (error2 instanceof InvalidWaitArgumentsError) throw new McpError(ErrorCode.InvalidParams, error2.message);
+        throw error2;
+      }
+    }
     return sanitizeResult(await upstream.callTool({ name, arguments: forceAsyncArguments(name, args) }));
   });
   return server;
@@ -18103,37 +18157,191 @@ async function serveStdio(upstream) {
   return server;
 }
 
+// server/doctor.mjs
+function runtimeChecks({ platform = process.platform, nodeVersion = process.versions.node } = {}) {
+  const supportedNode = Number(nodeVersion.split(".")[0]) >= 20;
+  return [
+    {
+      id: "node",
+      label: "Node.js",
+      status: supportedNode ? "pass" : "fail",
+      message: `Found ${nodeVersion}; requires Node.js 20 or newer.`,
+      ...!supportedNode ? { action: "Install Node.js 20 or newer, then start a new Codex task." } : {}
+    },
+    {
+      id: "platform",
+      label: "macOS Keychain",
+      status: platform === "darwin" ? "pass" : "fail",
+      message: platform === "darwin" ? "macOS supports the required credential store." : `The companion requires macOS; found ${platform}.`,
+      ...platform !== "darwin" ? { action: "Run the installed plugin on macOS with your login Keychain available." } : {}
+    }
+  ];
+}
+function describeConnectionError(error2) {
+  const message = typeof error2?.message === "string" ? error2.message : "";
+  if (message.startsWith("Krea authorization is required.") || error2?.status === 401 || error2?.code === 401) {
+    return {
+      code: "authorization_required",
+      message: "Krea authorization is required or has expired.",
+      action: "Run the companion's auth command on macOS, finish browser authorization, then run doctor again."
+    };
+  }
+  if (message.startsWith("Unable to read Krea OAuth credentials from macOS Keychain:") || message.startsWith("Unable to save Krea OAuth credentials to macOS Keychain:")) {
+    return {
+      code: "keychain_unavailable",
+      message: "The companion could not access macOS Keychain.",
+      action: "Open Keychain Access, unlock your login Keychain, allow the companion access if prompted, then run doctor again."
+    };
+  }
+  const networkCodes = /* @__PURE__ */ new Set(["ENOTFOUND", "EAI_AGAIN", "ECONNREFUSED", "ECONNRESET", "ETIMEDOUT", "UND_ERR_CONNECT_TIMEOUT"]);
+  if (message.startsWith("fetch failed") || networkCodes.has(error2?.code) || networkCodes.has(error2?.cause?.code)) {
+    return {
+      code: "network_unavailable",
+      message: "The companion could not reach Krea.",
+      action: "Check your network, proxy, and VPN settings and access to api.krea.ai and www.krea.ai, then run doctor again."
+    };
+  }
+  return {
+    code: "connection_failed",
+    message: "The Krea connection could not complete.",
+    action: "Check your network connection, then run the companion's auth command and try doctor again."
+  };
+}
+var DoctorCheckError = class extends Error {
+  constructor(code, message, action) {
+    super(message);
+    this.diagnostic = { code, message, action };
+  }
+};
+function extractModels(result) {
+  let payload = result?.structuredContent;
+  if (payload === void 0 && Array.isArray(result?.content)) {
+    const text = result.content.find((item) => item?.type === "text")?.text;
+    if (typeof text !== "string") return void 0;
+    try {
+      payload = JSON.parse(text);
+    } catch {
+      return void 0;
+    }
+  }
+  return Array.isArray(payload?.models) ? payload.models : void 0;
+}
+async function runDoctor({
+  connect = connectUpstream,
+  platform = process.platform,
+  nodeVersion = process.versions.node
+} = {}) {
+  const report = { ok: false, version: PLUGIN_VERSION, platform, nodeVersion, checks: runtimeChecks({ platform, nodeVersion }) };
+  if (report.checks.some((check) => check.status === "fail")) {
+    report.checks.push({ id: "connection", label: "Krea connection", status: "skip", message: "Fix the local runtime requirements before checking Krea." });
+    return report;
+  }
+  let client;
+  let phase = { id: "connection", label: "Krea connection" };
+  try {
+    ({ client } = await connect({ interactive: false, openBrowser: false }));
+    report.checks.push({ ...phase, status: "pass", message: "MCP initialization succeeded." });
+    phase = { id: "tools", label: "Tool discovery" };
+    const listed = await client.listTools();
+    if (!Array.isArray(listed?.tools) || listed.tools.length === 0) {
+      throw new DoctorCheckError("invalid_tool_list", "Krea returned no readable tool definitions.", "Try doctor again later; if this persists, update the plugin and check Krea service availability.");
+    }
+    report.checks.push({ ...phase, status: "pass", message: `${listed.tools.length} tools discovered.`, count: listed.tools.length });
+    phase = { id: "models", label: "Model access" };
+    const result = await client.callTool({ name: "list_models", arguments: {} });
+    if (result?.isError) {
+      throw new DoctorCheckError("model_access_failed", "Krea returned an error while listing models.", "Run the companion's auth command, confirm access to your Krea account, then run doctor again.");
+    }
+    const models = extractModels(result);
+    if (!models?.length) {
+      throw new DoctorCheckError("invalid_model_list", "Krea returned no readable models.", "Check model access in your Krea account and try doctor again later.");
+    }
+    report.checks.push({ ...phase, status: "pass", message: `${models.length} models are reachable.`, count: models.length });
+  } catch (error2) {
+    report.checks.push({ ...phase, status: "fail", ...error2 instanceof DoctorCheckError ? error2.diagnostic : describeConnectionError(error2) });
+  } finally {
+    if (client) {
+      try {
+        await client.close();
+      } catch {
+        report.checks.push({
+          id: "cleanup",
+          label: "Connection cleanup",
+          status: "fail",
+          code: "close_failed",
+          message: "The diagnostic connection did not close cleanly.",
+          action: "Run doctor again from a new terminal or Codex task."
+        });
+      }
+    }
+  }
+  report.ok = report.checks.every((check) => check.status === "pass");
+  return report;
+}
+function formatDoctorReport(report) {
+  const lines = [`Krea companion ${report.version}`];
+  for (const check of report.checks) {
+    lines.push(`[${check.status.toUpperCase()}] ${check.label}: ${check.message}`);
+    if (check.action) lines.push(`  Next: ${check.action}`);
+  }
+  lines.push(report.ok ? "Krea live check passed." : "Krea check did not pass; follow the steps above.");
+  return lines.join("\n") + "\n";
+}
+
 // server/cli.mjs
 var command = process.argv[2] ?? "stdio";
-if (process.platform !== "darwin") {
-  throw new Error("Krea for Codex currently supports macOS because OAuth credentials are stored in Apple Keychain.");
-}
-var nodeMajor = Number(process.versions.node.split(".")[0]);
-if (nodeMajor < 20) throw new Error(`Krea for Codex requires Node.js 20 or newer; found ${process.versions.node}.`);
-try {
-  if (command === "auth") {
-    const { client } = await connectUpstream({ interactive: true, openBrowser: !process.argv.includes("--no-open") });
-    const models = await client.callTool({ name: "list_models", arguments: {} });
-    const count = models?.structuredContent?.models?.length ?? "available";
-    process.stdout.write(`Krea authorization succeeded; ${count} models are reachable.
-`);
-    await client.close();
-  } else if (command === "doctor") {
-    const { client } = await connectUpstream();
-    const models = await client.callTool({ name: "list_models", arguments: {} });
-    const count = models?.structuredContent?.models?.length ?? 0;
-    if (!count) throw new Error("Krea connected but returned no models.");
-    process.stdout.write(`Krea live check passed; ${count} models are reachable.
-`);
-    await client.close();
-  } else if (command === "stdio") {
-    const { client } = await connectUpstream({ interactive: true, openBrowser: !process.argv.includes("--no-open") });
-    await serveStdio(client);
-  } else {
-    throw new Error(`Unknown command: ${command}. Use auth, doctor, or stdio.`);
+var options = process.argv.slice(3);
+var usage = "Usage: krea-companion.mjs auth [--no-open] | doctor [--json] | stdio [--no-open]\n";
+async function main() {
+  if (command === "--help" || command === "help" || command === "-h") {
+    process.stdout.write(usage);
+    return;
   }
+  if (!["auth", "doctor", "stdio"].includes(command)) {
+    process.stderr.write(`Unknown command. ${usage}`);
+    process.exitCode = 1;
+    return;
+  }
+  if (options.some((option) => option !== (command === "doctor" ? "--json" : "--no-open"))) {
+    process.stderr.write(`Unsupported option. ${usage}`);
+    process.exitCode = 1;
+    return;
+  }
+  if (command === "doctor") {
+    const report = await runDoctor();
+    const json = options.includes("--json");
+    const output = json || report.ok ? process.stdout : process.stderr;
+    output.write(json ? JSON.stringify(report, null, 2) + "\n" : formatDoctorReport(report));
+    process.exitCode = report.ok ? 0 : 1;
+    return;
+  }
+  const failures = runtimeChecks().filter((check) => check.status === "fail");
+  if (failures.length) {
+    for (const check of failures) process.stderr.write(`${check.message} ${check.action}
+`);
+    process.exitCode = 1;
+    return;
+  }
+  const { client } = await connectUpstream({ interactive: true, openBrowser: !options.includes("--no-open") });
+  if (command === "auth") {
+    try {
+      const models = await client.callTool({ name: "list_models", arguments: {} });
+      const count = models?.structuredContent?.models?.length ?? "available";
+      process.stdout.write(`Krea authorization succeeded; ${count} models are reachable.
+`);
+    } finally {
+      await client.close();
+    }
+  } else {
+    await serveStdio(client);
+  }
+}
+try {
+  await main();
 } catch (error2) {
-  process.stderr.write(`${error2.stack ?? error2.message}
+  const diagnostic = describeConnectionError(error2);
+  process.stderr.write(`${diagnostic.message}
+Next: ${diagnostic.action}
 `);
   process.exitCode = 1;
 }

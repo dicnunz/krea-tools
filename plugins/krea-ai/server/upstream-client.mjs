@@ -42,7 +42,7 @@ const waitForCallback = (provider, timeoutMs = 180_000) => new Promise((resolve,
 const transportFor = provider => new StreamableHTTPClientTransport(new URL(UPSTREAM_URL), { authProvider: provider });
 
 export async function connectUpstream({ interactive = false, openBrowser = interactive, store = new KeychainStore() } = {}) {
-  const provider = new PersistentOAuthProvider(store, { openBrowser });
+  const provider = new PersistentOAuthProvider(store, { openBrowser, displayAuthorizationUrl: interactive });
   let client = createClient();
   let transport = transportFor(provider);
   try {
