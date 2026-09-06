@@ -49,6 +49,10 @@ node ~/.codex/plugins/cache/krea-codex/krea-ai/*/dist/krea-companion.mjs auth
 
 If that path differs on your Codex version, run `codex plugin list` to locate the installed marketplace and plugin.
 
+Run the same companion with `doctor` to check the Node.js version, macOS support, MCP connection, tool discovery, and model access. It reports the failing stage and a suggested next step without printing raw upstream errors or credentials. `doctor --json` writes the report as JSON and exits with status 1 if any check fails. Doctor uses existing authorization and does not open a browser or submit generation jobs.
+
+If `wait_for_job` returns `waiting_timed_out`, the local waiting window ended; the generation has not been marked as failed. If it returns `waiting_interrupted`, a status request failed or returned an unreadable reply. Both results include the same job ID, the last readable status (or `unknown`), and a `resume` call. Resolve any reported connection or authorization issue and resume that job rather than submitting it again.
+
 To remove the plugin:
 
 ```sh
@@ -61,10 +65,11 @@ codex plugin marketplace remove krea-codex
 ```sh
 cd plugins/krea-ai
 npm ci
+npm run test:unit
 npm test
 npm run test:live
 ```
 
-`npm test` builds the self-contained runtime, runs unit tests, validates the Codex marketplace and plugin manifests, checks referenced assets, and verifies Krea's production OAuth discovery metadata. `npm run test:live` additionally uses the current macOS Keychain authorization to verify live model access.
+`npm run test:unit` runs the polling, CLI, OAuth URL handling, and in-memory MCP relay tests without network access, Keychain access, or paid generation. `npm test` also builds the self-contained runtime, validates the Codex marketplace and plugin manifests, checks referenced assets, and verifies Krea's production OAuth discovery metadata. `npm run test:live` additionally uses the current macOS Keychain authorization to verify live discovery and model access. The complete macOS release gate is documented in [AGENTS.md](AGENTS.md).
 
 This is a community-built integration and is not an official Krea product. Krea names and marks belong to their respective owners.

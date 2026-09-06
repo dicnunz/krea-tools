@@ -6,9 +6,10 @@ import { CALLBACK_URL, UPSTREAM_URL } from "./config.mjs";
 const execFileAsync = promisify(execFile);
 
 export class PersistentOAuthProvider {
-  constructor(store, { openBrowser = true } = {}) {
+  constructor(store, { openBrowser = true, displayAuthorizationUrl = true } = {}) {
     this.store = store;
     this.openBrowser = openBrowser;
+    this.displayAuthorizationUrl = displayAuthorizationUrl;
     this.pendingAuthorizationUrl = undefined;
   }
 
@@ -52,7 +53,7 @@ export class PersistentOAuthProvider {
   async redirectToAuthorization(authorizationUrl) {
     this.pendingAuthorizationUrl = authorizationUrl;
     if (this.openBrowser) await execFileAsync("open", [authorizationUrl.toString()]);
-    else process.stderr.write(`KREA_AUTH_URL=${authorizationUrl.toString()}\n`);
+    else if (this.displayAuthorizationUrl) process.stderr.write(`KREA_AUTH_URL=${authorizationUrl.toString()}\n`);
   }
 
   async saveCodeVerifier(codeVerifier) {

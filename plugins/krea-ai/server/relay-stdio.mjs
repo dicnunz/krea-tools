@@ -1,8 +1,8 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+import { CallToolRequestSchema, ErrorCode, ListToolsRequestSchema, McpError } from "@modelcontextprotocol/sdk/types.js";
 import { PLUGIN_VERSION } from "./config.mjs";
-import { forceAsyncArguments, sanitizeResult, sanitizeTool, waitForJob, waitForJobTool } from "./proxy-core.mjs";
+import { forceAsyncArguments, InvalidWaitArgumentsError, sanitizeResult, sanitizeTool, waitForJob, waitForJobTool } from "./proxy-core.mjs";
 
 export function createRelayServer(upstream) {
   const server = new Server({ name: "krea-local-companion", version: PLUGIN_VERSION }, {
@@ -17,7 +17,14 @@ export function createRelayServer(upstream) {
 
   server.setRequestHandler(CallToolRequestSchema, async request => {
     const { name, arguments: args = {} } = request.params;
-    if (name === waitForJobTool.name) return waitForJob(upstream, args);
+    if (name === waitForJobTool.name) {
+      try {
+        return await waitForJob(upstream, args);
+      } catch (error) {
+        if (error instanceof InvalidWaitArgumentsError) throw new McpError(ErrorCode.InvalidParams, error.message);
+        throw error;
+      }
+    }
     return sanitizeResult(await upstream.callTool({ name, arguments: forceAsyncArguments(name, args) }));
   });
 
