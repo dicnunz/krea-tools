@@ -1,4 +1,4 @@
-# Krea for Codex
+# Krea Tools
 
 Use Krea directly from Codex to discover live models, generate and edit images, create video, apply your LoRAs, enhance and upscale assets, and safely wait for long-running jobs.
 
@@ -9,7 +9,7 @@ The plugin uses your normal Krea account through OAuth and generations consume t
 Requirements: the Codex desktop app or CLI with plugins enabled and macOS. The launcher uses Node.js 20+ from your PATH or Codex's bundled runtime.
 
 ```sh
-codex plugin marketplace add dicnunz/krea-codex-plugin
+codex plugin marketplace add dicnunz/krea-tools
 codex plugin add krea-ai@krea-codex
 ```
 
